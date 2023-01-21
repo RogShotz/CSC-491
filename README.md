@@ -8,7 +8,7 @@ In my own world I have been steadily applying for jobs. The bad part about it ho
 
 ### Objective
 
-Create a bot that has the ability to find job apps for me. Extend the bot to automatically fill out forms.
+Create a bot that has the ability to find potential jobs and a bot to automatically fill out forms.
 
 ### Milestones
 
@@ -18,3 +18,9 @@ Create a bot that has the ability to find job apps for me. Extend the bot to aut
 - Automatically apply and notify
 - Structure into a UI
 - Create user guide on use of the program
+
+## Requirements
+
+### There will be no required physical materials for this project. Eventually this project may include a web based app, which would require some server hosting.
+
+### Python library requirements will be listed in the requirements doc.
