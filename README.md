@@ -21,6 +21,8 @@ Create a bot that has the ability to find potential jobs and a bot to automatica
 
 ## Requirements
 
-### There will be no required physical materials for this project. Eventually this project may include a web based app, which would require some server hosting.
+### Psychical:
+There will be no required physical materials for this project. Eventually this project may include a web based app, which would require some server hosting.
 
-### Python library requirements will be listed in the requirements doc.
+### Non-Psychical:
+Python library requirements will be listed in the requirements doc.
