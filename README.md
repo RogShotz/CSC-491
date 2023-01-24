@@ -14,7 +14,7 @@ Create a bot that has the ability to find job apps for me. Extend the bot to aut
 
 - Create bot to login with selenium
 - Find jobs that match criteria
-- Compile or otherwise notify my of the data
+- Compile or otherwise notify user of the data
 - Automatically apply and notify
 - Structure into a UI
 - Create user guide on use of the program
