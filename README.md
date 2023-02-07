@@ -44,3 +44,5 @@ https://github.com/NathanDuma/LinkedIn-Easy-Apply-Bot
 ### 1/24/23
 Finished writing senior project proposal. Started the base repository for the bot. Got selenium up and running. Created code to both login in by sending keys, or, and what I will be using, is authentication VIA cookie. This allows users to submit a Cookie rather than a username and password. It's less scary but probably still just as dangerous in terms of security.
 
+## 1/7/23
+Finished writing relevant filters like on site/ easy apply filter. Created a way to parse out a list of job ids and navigate to their web pages. At this point I need to continue to work on filling in job applications then review data before actually finishing this with actual application pushes. My advisor meeting noted that point, so hopefully by next test, job fill out will be complete and pseudo "applys" will start to be logged. This will satisify the criterium for success area.
