@@ -19,10 +19,28 @@ Create a bot that has the ability to find potential jobs and a bot to automatica
 - Structure into a UI
 - Create user guide on use of the program
 
+### Criterium for success
+- Apply to 50 jobs
+    - Fail rate < 90%
+    - Improper job type < 90%
+    - Accurate information submitted ~100%
+    - Not rate limited / rate limit bypassed
+
+
 ## Requirements
 
-### Psychical:
+### Physical:
 There will be no required physical materials for this project. Eventually this project may include a web based app, which would require some server hosting.
 
-### Non-Psychical:
+### Non-Physical:
 Python library requirements will be listed in the requirements doc.
+
+### Other projects like mine
+https://github.com/nicolomantini/LinkedIn-Easy-Apply-Bot
+https://github.com/NathanDuma/LinkedIn-Easy-Apply-Bot
+
+## Progress Reports
+
+### 1/24/23
+Finished writing senior project proposal. Started the base repository for the bot. Got selenium up and running. Created code to both login in by sending keys, or, and what I will be using, is authentication VIA cookie. This allows users to submit a Cookie rather than a username and password. It's less scary but probably still just as dangerous in terms of security.
+
