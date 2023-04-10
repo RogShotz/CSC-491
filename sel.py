@@ -30,50 +30,66 @@ def element_exists(by, path):
 
 
 def easy_apply():
+    #fix wait
+    time.sleep(1)
     apply_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[contains(@class, "jobs-apply-button")]')))
     apply_button.click()
 
-    wait.until(EC.presence_of_element_located((By.XPATH, '//input[contains(@id, "phoneNumber")]'))).send_keys(os.getenv("PHONE"))
-
     if element_exists(By.XPATH, '//button[contains(@aria-label, "Submit application")]'):
+        unfollow()
         print("PSEUDO SUBMIT")
+        write_log(get_job_id(), submit='t')
+        return
 
-
-    next_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR,
-                        "//button[contains(@aria-label, 'Continue to next step')]")))
-    next_button.click()
-
-    resume_name = driver.find_element(By.XPATH, '//h3[contains(@class, "jobs-document-upload")]').text
     
-    if element_exists(By.XPATH, "//button[contains(@aria-label, 'Continue to next step')]"):
-        "REQUIRES MULTIPLE STEPS"
-    else:
-        review_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR,
-                        '//button[aria-label="Review your application"]')))
-        review_button.click()
+    next_button = driver.find_element(By.XPATH,
+                        "//button[contains(@aria-label, 'Continue to next step')]")
+    while next_button:
+        if not driver.find_elements(By.XPATH, '//span[@class="artdeco-inline-feedback__message"]'): # if not false, then it has errored out
+            next_button.click()
+            review_button =  driver.find_elements(By.XPATH, '//span[contains(., "Review")]')
+            if review_button:
+                review_button[0].click()
+                if not driver.find_elements(By.XPATH, '//span[contains(., "Review")]'):
+                    print("Unanswerable prompt before review, throwing")
+            submit_button =  driver.find_elements(By.XPATH, '//button[contains(@aria-label, "Submit application")]')
 
+            if submit_button:
+                unfollow()
+            
+                write_log(get_job_id(), os.getenv("USERNAME"), 1, os.getenv("PHONE"), "testing", submit='t')
+                print("PSEUDO SUBMIT")
+                return
+        else:
+            print("Unanswerable prompt, throwing")
+
+            write_log(get_job_id(), os.getenv("USERNAME"), 1, os.getenv("PHONE"), "testing", submit='t')
+            return
+        next_button = driver.find_element(By.XPATH,
+                        "//button[contains(@aria-label, 'Continue to next step')]")
+
+    #include this for resume testing, testing prof does not work
+    #resume_name = driver.find_element(By.XPATH, '//h3[contains(@class, "jobs-document-upload")]').text
+    
+
+def unfollow(): #unfollows employer before submitting
     follow_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "label[for='follow-company-checkbox']")))
     follow_button.click()
 
-    submit_button =  wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '//button[contains(@aria-label, "Submit application")]')))
-    print("PSEUDO SUBMIT")
-    
-    
+def get_job_id(): # gets job ID when at job application page
+    return driver.current_url.split("/view/", 1)[1][:-1]
 
-    with open('log.csv', 'w') as csvfile:
-        fields = ['job-id', 'contact', 'resume', 'other']
+def write_log(job_id, email = "na", phone_code = "na", phone_number = "na", resume = "na", question_vars = "na", submit = "f"):
+    with open('log.csv', 'a') as csvfile:
+        fields = ['job-id', 'email', 'phone-country-code', 'phone-number', 'resume', 'question-vars', 'submitted']
         csvwriter = csv.DictWriter(csvfile, fieldnames=fields)
-        csvwriter.writeheader()
-        csvwriter.writerow({'job_id': driver.current_url.split("/view/", 1)[1],
-                    'email': str("NA"),
-                    'phone-country-code': str("NA"),
-                    'phone-numer': str(os.getenv("PHONE")),
-                    'resume': str(resume_name),
-                    'question_vars': str("f")})
-
-def no_follow(self):
-    follow_checkbox = wait.until(EC.presence_of_element_located((By.XPATH, '//label[contains(.,"to stay up to date with their page.")]'))).send_keys(os.getenv("PHONE"))
-    follow_checkbox.click()
+        csvwriter.writerow({'job-id': job_id,
+                    'email': str(email),
+                    'phone-country-code': str(phone_code),
+                    'phone-number': str(phone_number),
+                    'resume': str(resume),
+                    'question-vars': str(question_vars),
+                    'submitted': str(submit)})
 
 
 def get_job(ID: str):
@@ -90,7 +106,11 @@ if __name__ == "__main__":
     options.add_argument("--disable-dev-shm-usage")
     driver = webdriver.Chrome("./chromedriver")
 
-    wait = WebDriverWait(driver, 20)  # var for waiting consistently
+    wait = WebDriverWait(driver, 5)  # var for waiting consistently
+    with open('log.csv', 'w') as csvfile:
+        fields = ['job-id', 'email', 'phone-country-code', 'phone-number', 'resume', 'question-vars', 'submitted']
+        csvwriter = csv.DictWriter(csvfile, fieldnames=fields)
+        csvwriter.writeheader()
 
     # TODO: figure out how direct job searches work
     # add position so you don't have to reload
@@ -106,21 +126,27 @@ if __name__ == "__main__":
     print(filter_url)
     driver.get(filter_url)
 
-    links = wait.until(EC.visibility_of_all_elements_located((By.XPATH, '//div[@data-job-id]')))
-    IDs: list = []
+    links = driver.find_elements("xpath",
+                    '//div[@data-job-id]'
+                )
+    job_ids = [3257102022, 3541992515] #1 page, error out
 
     # children selector is the container of the job cards on the left
     for link in links:
-        children = wait.until(EC.visibility_of_all_elements_located((By.XPATH, '//ul[@class="scaffold-layout__list-container"]')))
+        children = link.find_elements("xpath",
+                        '//ul[@class="scaffold-layout__list-container"]'
+                    )
 
         for child in children:
-            temp = wait.until(EC.presence_of_element_located((By.XPATH, '//div[@data-job-id]')))
-            temp = temp.get_attribute("data-job-id")
+            temp = link.get_attribute("data-job-id")
             jobID = temp.split(":")[-1]
-            IDs.append(int(jobID))
+            job_ids.append(int(jobID))
     
-    get_job(IDs[0])
-    easy_apply()
+    #print(job_ids)
+    for id in job_ids:
+        print("applying for", id)
+        get_job(id)
+        easy_apply()
 
     time.sleep(1000)
     driver.quit()
