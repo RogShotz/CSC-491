@@ -54,4 +54,4 @@ Job application datum filled and structured. Started logging with CSV's, added m
 Redid and reformatted project entirely. Structured with design principles in mind. Need to finish the apply process.
 
 ## 4/10/23
-Successful pseudo submissions with proper logging added. Handles almost all cases and has a hit rate of about 70% (eyeballed). Does not actually submit, need to inspect logged data to make sure I can start the analytic process. Some issues have popped up that require adressing such as multiple prompts. Next update should have system entirely running hopefully with logged data to be analyzed.
+Successful pseudo submissions with proper logging added. Handles almost all cases and has a hit rate of about 70% (eyeballed). Does not actually submit, need to inspect logged data to make sure I can start the analytic process. Some issues have popped up that require adressing such as multiple prompts. Next update should have system entirely running hopefully with logged data to be analyzed. I also need to add/ remove relevant datum to csv. Add name / desc or relevant info about the listing. Additionally if time, verify autofilled datum.
