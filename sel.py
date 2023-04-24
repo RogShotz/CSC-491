@@ -30,10 +30,14 @@ def element_exists(by, path):
 
 
 def easy_apply():
-    #fix wait
-    time.sleep(1)
-    apply_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[contains(@class, "jobs-apply-button")]')))
-    apply_button.click()
+    #TODO: fix wait
+    for i in range(0,2):
+        try:
+            wait.until(EC.element_to_be_clickable((By.XPATH, '//button[contains(@class, "jobs-apply-button")]'))).click()
+            break
+        except EC.StaleElementReferenceException:
+            print("Stale Reference in Easy Apply, Retrying")
+
 
     if element_exists(By.XPATH, '//button[contains(@aria-label, "Submit application")]'):
         unfollow()
@@ -45,13 +49,16 @@ def easy_apply():
     next_button = driver.find_element(By.XPATH,
                         "//button[contains(@aria-label, 'Continue to next step')]")
     while next_button:
-        if not driver.find_elements(By.XPATH, '//span[@class="artdeco-inline-feedback__message"]'): # if not false, then it has errored out
+        if not driver.find_elements(By.XPATH, '//span[@class="artdeco-inline-feedback__message"]'): # if not false, then indeed has told us we need more info
             next_button.click()
             review_button =  driver.find_elements(By.XPATH, '//span[contains(., "Review")]')
             if review_button:
                 review_button[0].click()
-                if not driver.find_elements(By.XPATH, '//span[contains(., "Review")]'):
-                    print("Unanswerable prompt before review, throwing")
+                submit_button =  driver.find_elements(By.XPATH, '//button[contains(@aria-label, "Submit application")]')
+                if not submit_button: # if submit doesn't pop up
+                    print("Unanswerable prompt in review, throwing")
+                    write_log(get_job_id(), submit='f')
+                    return
             submit_button =  driver.find_elements(By.XPATH, '//button[contains(@aria-label, "Submit application")]')
 
             if submit_button:
@@ -65,8 +72,14 @@ def easy_apply():
 
             write_log(get_job_id(), os.getenv("USERNAME"), 1, os.getenv("PHONE"), "testing", submit='t')
             return
-        next_button = driver.find_element(By.XPATH,
+        try: #got asked for more info on a review slide
+            next_button = driver.find_element(By.XPATH,
                         "//button[contains(@aria-label, 'Continue to next step')]")
+        except NoSuchElementException:
+            print("Unanswerable prompt upon review click, throwing")
+            write_log(get_job_id(), submit='f')
+            return
+            
 
     #include this for resume testing, testing prof does not work
     #resume_name = driver.find_element(By.XPATH, '//h3[contains(@class, "jobs-document-upload")]').text
@@ -126,21 +139,12 @@ if __name__ == "__main__":
     print(filter_url)
     driver.get(filter_url)
 
-    links = driver.find_elements("xpath",
-                    '//div[@data-job-id]'
-                )
-    job_ids = [3257102022, 3541992515] #1 page, error out
+    links = driver.find_elements("xpath",'//li[@data-occludable-job-id]') #//div[@data-job-id]'
+    job_ids = []#[3257102022, 3541992515] #1 page, error out
 
     # children selector is the container of the job cards on the left
     for link in links:
-        children = link.find_elements("xpath",
-                        '//ul[@class="scaffold-layout__list-container"]'
-                    )
-
-        for child in children:
-            temp = link.get_attribute("data-job-id")
-            jobID = temp.split(":")[-1]
-            job_ids.append(int(jobID))
+        job_ids.append(int(link.get_attribute('data-occludable-job-id')))
     
     #print(job_ids)
     for id in job_ids:
@@ -148,5 +152,6 @@ if __name__ == "__main__":
         get_job(id)
         easy_apply()
 
+    print("finish")
     time.sleep(1000)
     driver.quit()
