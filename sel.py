@@ -10,6 +10,8 @@ from dotenv import load_dotenv
 import csv
 import li_dicts as dicts
 
+start_time = time.time()
+
 def add_filter(f_type: str, f_type_dict: dict):
     out = ""
     pre_filter = "&f_"
@@ -30,6 +32,9 @@ def element_exists(by, path):
 
 
 def easy_apply():
+    app_time = str(time.time() - start_time)
+    job_title = wait.until(EC.element_to_be_clickable((By.XPATH, '//h1[contains(@class, "job-title")]'))).text
+    company = wait.until(EC.element_to_be_clickable((By.XPATH, '//a[@class="ember-view t-black t-normal"]'))).text
     #TODO: fix wait
     for i in range(0,2):
         try:
@@ -42,7 +47,7 @@ def easy_apply():
     if element_exists(By.XPATH, '//button[contains(@aria-label, "Submit application")]'):
         unfollow()
         print("PSEUDO SUBMIT")
-        write_log(get_job_id(), submit='t')
+        write_log(company, job_title, get_job_id(), submit='t', app_time=app_time)
         return
 
     
@@ -57,27 +62,27 @@ def easy_apply():
                 submit_button =  driver.find_elements(By.XPATH, '//button[contains(@aria-label, "Submit application")]')
                 if not submit_button: # if submit doesn't pop up
                     print("Unanswerable prompt in review, throwing")
-                    write_log(get_job_id(), submit='f')
+                    write_log(company, job_title, get_job_id(), submit='f', app_time=app_time)
                     return
             submit_button =  driver.find_elements(By.XPATH, '//button[contains(@aria-label, "Submit application")]')
 
             if submit_button:
                 unfollow()
             
-                write_log(get_job_id(), os.getenv("USERNAME"), 1, os.getenv("PHONE"), "testing", submit='t')
+                write_log(company, job_title, get_job_id(), os.getenv("USERNAME"), 1, os.getenv("PHONE"), "testing", submit='t', app_time=app_time)
                 print("PSEUDO SUBMIT")
                 return
         else:
             print("Unanswerable prompt, throwing")
 
-            write_log(get_job_id(), os.getenv("USERNAME"), 1, os.getenv("PHONE"), "testing", submit='t')
+            write_log(company, job_title, get_job_id(), os.getenv("USERNAME"), 1, os.getenv("PHONE"), "testing", submit='t', app_time=app_time)
             return
         try: #got asked for more info on a review slide
             next_button = driver.find_element(By.XPATH,
                         "//button[contains(@aria-label, 'Continue to next step')]")
         except NoSuchElementException:
             print("Unanswerable prompt upon review click, throwing")
-            write_log(get_job_id(), submit='f')
+            write_log(company, job_title, get_job_id(), submit='f', app_time=app_time)
             return
             
 
@@ -92,17 +97,21 @@ def unfollow(): #unfollows employer before submitting
 def get_job_id(): # gets job ID when at job application page
     return driver.current_url.split("/view/", 1)[1][:-1]
 
-def write_log(job_id, email = "na", phone_code = "na", phone_number = "na", resume = "na", question_vars = "na", submit = "f"):
+def write_log(company = "na", position = "na", job_id = "0", email = "na", phone_code = "0", phone_number = "0", resume = "na", question_vars = "na", submit = "f", app_time = "0"):
     with open('log.csv', 'a') as csvfile:
-        fields = ['job-id', 'email', 'phone-country-code', 'phone-number', 'resume', 'question-vars', 'submitted']
+        fields = ['company', 'position', 'job-id', 'email', 'phone-country-code', 'phone-number', 'resume', 'question-vars', 'submitted', 'app_time']
         csvwriter = csv.DictWriter(csvfile, fieldnames=fields)
-        csvwriter.writerow({'job-id': job_id,
+        csvwriter.writerow({
+                    'company': str(company),
+                    'position': str(position),
+                    'job-id': str(job_id),
                     'email': str(email),
                     'phone-country-code': str(phone_code),
                     'phone-number': str(phone_number),
                     'resume': str(resume),
                     'question-vars': str(question_vars),
-                    'submitted': str(submit)})
+                    'submitted': str(submit),
+                    'app_time': str(app_time)})
 
 
 def get_job(ID: str):
