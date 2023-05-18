@@ -1,4 +1,4 @@
-job-id,email,phone-country-code,phone-number,resume,question-vars,submitted
+company,position,job-id,email,phone-country-code,phone-number,resume,question-vars,submitted,app-time
 "Regional Multiple Listing Service, Inc. (RMLS)",Application Developer,3601421235,RogShotz,1,8058683601,testing,na,t,9.543987035751343
 Magento Developer UK,Software Design Engineer,3575973490,RogShotz,1,8058683601,testing,na,t,11.37136435508728
 Zone 5 Technologies,Embedded Software Engineer,3569247932,na,0,0,na,na,f,13.867306232452393

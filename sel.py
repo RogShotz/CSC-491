@@ -99,7 +99,7 @@ def get_job_id(): # gets job ID when at job application page
 
 def write_log(company = "na", position = "na", job_id = "0", email = "na", phone_code = "0", phone_number = "0", resume = "na", question_vars = "na", submit = "f", app_time = "0"):
     with open('log.csv', 'a') as csvfile:
-        fields = ['company', 'position', 'job-id', 'email', 'phone-country-code', 'phone-number', 'resume', 'question-vars', 'submitted', 'app_time']
+        fields = ['company', 'position', 'job-id', 'email', 'phone-country-code', 'phone-number', 'resume', 'question-vars', 'submitted', 'app-time']
         csvwriter = csv.DictWriter(csvfile, fieldnames=fields)
         csvwriter.writerow({
                     'company': str(company),
@@ -111,7 +111,7 @@ def write_log(company = "na", position = "na", job_id = "0", email = "na", phone
                     'resume': str(resume),
                     'question-vars': str(question_vars),
                     'submitted': str(submit),
-                    'app_time': str(app_time)})
+                    'app-time': str(app_time)})
 
 
 def get_job(ID: str):
@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
     wait = WebDriverWait(driver, 5)  # var for waiting consistently
     with open('log.csv', 'w') as csvfile:
-        fields = ['job-id', 'email', 'phone-country-code', 'phone-number', 'resume', 'question-vars', 'submitted']
+        fields = ['company', 'position', 'job-id', 'email', 'phone-country-code', 'phone-number', 'resume', 'question-vars', 'submitted', 'app-time']
         csvwriter = csv.DictWriter(csvfile, fieldnames=fields)
         csvwriter.writeheader()
 
