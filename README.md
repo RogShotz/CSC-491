@@ -1,5 +1,7 @@
 # CSC-491: Senior Project at Cal Poly SLO
 
+[Senior Project Report]([https://pages.github.com/](https://docs.google.com/document/d/1k2a9gsr63DCmDBt7osOWd7omu96eXUNJOEZVy-2auZg/edit?usp=sharing)).
+
 ## Overview
 
 ### The need for a job bot
