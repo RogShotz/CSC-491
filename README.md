@@ -1,6 +1,6 @@
 # CSC-491: Senior Project at Cal Poly SLO
 
-[here](myLib/README.md)
+An absolute link to [Google](https://google.com)
 
 ## Overview
 
