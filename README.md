@@ -1,6 +1,6 @@
 # CSC-491: Senior Project at Cal Poly SLO
 
-An absolute link to [Google](https://google.com)
+Check out my full report [here](https://docs.google.com/document/d/1k2a9gsr63DCmDBt7osOWd7omu96eXUNJOEZVy-2auZg/edit?usp=sharing).
 
 ## Overview
 
